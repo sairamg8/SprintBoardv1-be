@@ -47,6 +47,10 @@ async function markApplied(name: string) {
   await client.query("INSERT INTO migrations (name) VALUES ($1)", [name])
 }
 
+async function markReverted(file: string) {
+  await client.query(`DELETE FROM migrations WHERE (name) = $1`, [file])
+}
+
 /** Utility functions for migration end */
 
 export async function MigrateAll() {
@@ -65,11 +69,30 @@ export async function MigrateAll() {
     console.log(`Running migration ${file}`)
 
     const migration = await loadMigrationFile(file)
-    migration.up()
+    await migration.up()
     await markApplied(file)
 
     console.log(`Applied ${file}`)
   }
 
   console.log(`\n ${pending.length} migrations applied`)
+}
+
+export async function rollbackAll() {
+  await ensureMigrationsTable()
+  const applied = await getAppliedMigrations()
+
+  const toRollback = [...applied].sort().reverse()
+
+  if (toRollback.length === 0) {
+    console.log(`Nothing to rollback, No migrations have applied.`)
+    return
+  }
+
+  for (const file of toRollback) {
+    console.log(`Rolling back ${file}`)
+    const migration = await loadMigrationFile(file)
+    await migration.down()
+    await markReverted(file)
+  }
 }

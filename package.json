@@ -8,13 +8,15 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsup && tsc-alias",
     "start": "node dist/server.js",
-    "migrate": "tsx src/db/migrate.ts all"
+    "migrate": "tsx src/db/migrate.ts all",
+    "undo:migrate": "tsx src/db/migrate.ts undo"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.33.0",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",
@@ -25,8 +27,10 @@
     "typescript": "^6.0.2"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "zod": "^4.3.6"
   }
 }

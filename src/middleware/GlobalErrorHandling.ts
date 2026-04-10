@@ -6,7 +6,7 @@ export const GlobalErrorHandling = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(req.originalUrl)
+  console.log(error)
   res.status(500).json({
     message: error.toString(),
   })
