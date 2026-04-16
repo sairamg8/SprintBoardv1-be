@@ -1,4 +1,4 @@
-import { MigrateAll, rollbackAll } from "./migrator"
+import { MigrateAll, rollbackAll, rollbackSingle } from "./migrator"
 import { client } from "./pool"
 
 const [, , command, filename] = process.argv
@@ -15,6 +15,10 @@ async function main() {
       console.log(command, filename)
       await rollbackAll()
       client.end()
+      break
+
+    case "rollback:single":
+      await rollbackSingle(filename)
       break
 
     default:

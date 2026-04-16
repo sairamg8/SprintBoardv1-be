@@ -9,7 +9,8 @@
     "build": "tsup && tsc-alias",
     "start": "node dist/server.js",
     "migrate": "tsx src/db/migrate.ts all",
-    "undo:migrate": "tsx src/db/migrate.ts undo"
+    "undo:migrate": "tsx src/db/migrate.ts undo",
+    "undo:single": "tsx src/db/migrate.ts rollback:single"
   },
   "keywords": [],
   "author": "",

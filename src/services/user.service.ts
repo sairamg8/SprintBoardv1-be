@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import jwt, { SignOptions } from "jsonwebtoken"
 import "dotenv/config"
 import { omit } from "@/utils/utils"
+import { JWTPayload } from "@/types"
 
 type extraOptions = {
   includePassword: boolean
@@ -29,6 +30,12 @@ export class UserRepository {
     }
 
     return jwt.sign(payload, secret, options)
+  }
+
+  static verifyToken(token: string): JWTPayload {
+    const secret = process.env.JWT_SECRET || "thisisalonglongsecrect"
+
+    return jwt.verify(token, secret) as JWTPayload
   }
 
   static async generateRefreshToken<T>(payload: Record<string, T>) {

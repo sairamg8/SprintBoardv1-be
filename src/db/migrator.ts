@@ -96,3 +96,16 @@ export async function rollbackAll() {
     await markReverted(file)
   }
 }
+
+export async function rollbackSingle(filename: string) {
+  await ensureMigrationsTable()
+
+  const applied = await getAppliedMigrations()
+
+  if (!applied.has(filename)) console.log(`Nothing to rollback: ${filename}`)
+
+  const migration = await loadMigrationFile(filename)
+  await migration.down()
+  await markReverted(filename)
+  console.log(`Reverted: ${filename}`)
+}
