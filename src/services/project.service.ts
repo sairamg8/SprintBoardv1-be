@@ -3,9 +3,22 @@ import { BNewProject, ProjectT } from "@/types/project"
 
 class ProjectRepository {
   static async FetchAllProjects(userId: string) {
+    console.log("Fetch All projects")
+
     const data = await client.query(
       `SELECT * FROM projects WHERE owner_id = $1`,
       [userId],
+    )
+
+    return data.rows
+  }
+
+  static async GetProject(userId: string, id: string) {
+    const data = await client.query(
+      `
+      SELECT * FROM projects WHERE id = $1 AND owner_id = $2
+      `,
+      [id, userId],
     )
 
     return data.rows
@@ -41,8 +54,6 @@ class ProjectRepository {
 
     const setClause = entries.map(([key], i) => `${key} = $${i + 1}`).join(", ")
     const values = entries.map(([_, value]) => value)
-
-    console.log(setClause.length)
 
     const query = await client.query(
       `

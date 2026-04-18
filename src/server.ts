@@ -4,6 +4,7 @@ import { GlobalErrorHandling } from "./middleware/GlobalErrorHandling"
 import auth from "./routes/auth.route"
 import project from "./routes/project.route"
 import registerTypeParser from "./db/typeParser"
+import sprint from "./routes/sprint.route"
 
 registerTypeParser()
 
@@ -15,6 +16,7 @@ server.use(e.urlencoded({ extended: false }))
 
 server.use("/auth", auth)
 server.use("/project", project)
+server.use("/sprints", sprint)
 
 server.use(GlobalErrorHandling)
 

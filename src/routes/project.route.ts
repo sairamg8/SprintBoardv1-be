@@ -4,6 +4,7 @@ import { Validate } from "@/middleware/Validate"
 import {
   BulkProjectSchema,
   DeleteProjectSchema,
+  GetProject,
   NewProjectSchema,
   UpdateProjectSchema,
 } from "@/types/project"
@@ -11,6 +12,7 @@ import e from "express"
 
 const project = e.Router()
 
+project.get("/:id", Authenticate, Validate(GetProject), ProjectCtrl.getProject)
 project.get("/", Authenticate, ProjectCtrl.getAllProjects)
 project.post(
   "/",

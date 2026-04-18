@@ -1,10 +1,9 @@
 import ProjectRepository from "@/services/project.service"
 import {
-  BNewProject,
   BulkProjectSchema,
   DeleteProjectSchema,
+  GetProject,
   NewProjectSchema,
-  ProjectT,
   UpdateProjectSchema,
 } from "@/types/project"
 import { Request, Response } from "express"
@@ -19,6 +18,18 @@ export class ProjectCtrl {
 
     res.json({
       message: "Project fetched successfully",
+      data: response,
+    })
+  }
+
+  static async getProject(req: Request, res: Response) {
+    const { params } = GetProject.parse(req)
+
+    const user = req.userInfo
+
+    const response = await ProjectRepository.GetProject(user.id, params.id)
+
+    return res.json({
       data: response,
     })
   }
