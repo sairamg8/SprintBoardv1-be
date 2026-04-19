@@ -54,7 +54,7 @@ export class UserRepository {
   ): Promise<QueryResult<UserRow>> {
     const result = await client.query(
       `
-      SELECT id, first_name, last_name, email, designation, created_at, ${options?.includePassword ? "password_hash" : ""}
+      SELECT id, first_name, last_name, email, designation, created_at ${options?.includePassword ? ", password_hash" : ""}
       FROM users WHERE email = $1
       `,
       [email],
@@ -93,8 +93,7 @@ export class UserRepository {
       await this.isUserExists(data.email, { includePassword: true })
     ).rows[0]
 
-    if (!isEmailExist)
-      throw new Error("User Email / Password not found", { cause: "sas" })
+    if (!isEmailExist) throw new Error("User Email / Password not found")
 
     const isPasswordMatch = await UserRepository.verifySecret(
       data.password,

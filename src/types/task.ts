@@ -6,17 +6,17 @@ const BaseSchema = z.object({
   due_date: z.iso.datetime({ error: "Due date cannot be empty" }),
   description: z.string().optional(),
   assigned_by: z.uuidv4().nullable().optional(),
-  owner_id: z.uuidv4({ error: "Task owner required" }),
   project_id: z.uuidv4({ error: "Project ID cannot be empty" }),
-  type: z
+  status: z
     .enum(["not_started", "in_progress", "completed", "in_review", "in_test"])
     .optional(),
+  type: z.enum(["task", "bug"]),
 })
 
 export const CreateTask = z.object({
   body: BaseSchema.extend({
     assigned_by: z.uuidv4().nullable().optional().default(null),
-    type: z
+    status: z
       .enum(["not_started", "in_progress", "completed", "in_review", "in_test"])
       .default("not_started"),
   }),

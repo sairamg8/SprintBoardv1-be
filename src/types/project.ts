@@ -4,8 +4,10 @@ export const NewProjectSchema = z.object({
   body: z.object({
     name: z.string({ error: "Project name must be required" }),
     key: z.string({ error: "A unique Key Required, eg. TP1" }),
-    status: z.enum(["idle", "active", "hold", "in_progress"]),
-    due_date: z.iso.datetime({ error: "Due date required" }),
+    status: z.enum(["idle", "active", "hold", "in_progress"]).nullable(),
+    due_date: z.iso
+      .date({ error: "Due date required" })
+      .or(z.iso.datetime({ error: "Due date required" })),
     description: z.string().optional(),
   }),
 })

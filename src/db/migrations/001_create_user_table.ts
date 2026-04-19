@@ -1,15 +1,20 @@
 import { Migration } from "../migrator"
 import { client } from "../pool"
 
+// designation VARCHAR(20) DEFAULT NULL CHECK (designation IN ('admin', 'developer', 'manager', 'tester', null)), -> Wrong
+// designation VARCHAR(20) DEFAULT NULL CHECK (designation IS NULL OR designation IN ('admin', 'developer', 'manager', 'tester')), -> correct
+
 export const up = async (): Promise<void> => {
   await client.query(`
+        CREATE TYPE user_designation AS ENUM ('admin', 'developer', 'manager', 'tester');
+
         CREATE TABLE IF NOT EXISTS users (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
         password_hash TEXT NOT NULL,
-        designation VARCHAR(20) DEFAULT NULL CHECK (designation IN ('admin', 'developer', 'manager', 'tester', null)),
+        designation user_designation DEFAULT NULL,
         reset_token TEXT DEFAULT NULL,
         reset_token_expiry TIMESTAMP DEFAULT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT NOW(),

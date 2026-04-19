@@ -2,7 +2,8 @@ import { client } from "../pool"
 
 export const up = async () => {
   await client.query(`
-        CREATE TYPE task_T AS ENUM ('not_started', 'in_progress', 'completed', 'in_review', 'in_test');
+        CREATE TYPE task_status AS ENUM ('not_started', 'in_progress', 'completed', 'in_review', 'in_test');
+        CREATE TYPE task_type AS ENUM ('task', 'bug');
 
         CREATE TABLE IF NOT EXISTS tasks (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
@@ -13,7 +14,8 @@ export const up = async () => {
         owner_id UUID NOT NULL,
         project_id UUID NOT NULL,
         assigned_by UUID DEFAULT NULL,
-        type task_T DEFAULT 'not_started',
+        status task_status DEFAULT 'not_started',
+        type task_type DEFAULT 'task',
 
         created_at TIMESTAMP NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -45,7 +47,8 @@ export const up = async () => {
 
 export const down = async () => {
   await client.query(`DROP TABLE IF EXISTS tasks`)
-  await client.query(`DROP TYPE IF EXISTS task_T`)
+  await client.query(`DROP TYPE IF EXISTS task_status`)
+  await client.query(`DROP TYPE IF EXISTS task_type`)
 }
 
 const migration = {
